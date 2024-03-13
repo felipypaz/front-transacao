@@ -3,7 +3,7 @@ import styles from "./page.module.css";
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const ITEMS_PER_PAGE = 10; // Define o número de itens por página
+const ITEMS_PER_PAGE = 10;
 
 export default function Home() {
   const [data, setData] = useState([]);
@@ -15,15 +15,15 @@ export default function Home() {
 
   useEffect(() => {
     fetchData();
-  }, []); // Chama a função fetchData uma vez quando o componente é montado
+  }, []); 
 
   useEffect(() => {
     paginateData();
-  }, [data, currentPage, filterType, filterAmount]); // Atualiza a página atualizada ou os dados quando necessário
+  }, [data, currentPage, filterType, filterAmount]); 
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/transacoes');
+      const response = await axios.get('http://localhost:3001/transacoes');
       setData(response.data);
     } catch (error) {
       console.error('Erro:', error);
@@ -33,7 +33,6 @@ export default function Home() {
   const paginateData = () => {
     let filteredData = data;
 
-    // Aplica filtros
     if (filterType) {
       filteredData = filteredData.filter(transaction => transaction.type === filterType);
     }
@@ -41,7 +40,6 @@ export default function Home() {
       filteredData = filteredData.filter(transaction => `${transaction.amount}`.startsWith(filterAmount));
     }
 
-    // Atualiza o total de páginas de acordo com os dados filtrados
     setTotalPages(Math.ceil(filteredData.length / ITEMS_PER_PAGE));
 
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -57,12 +55,21 @@ export default function Home() {
 
   const handleFilterTypeChange = (event) => {
     setFilterType(event.target.value);
-    setCurrentPage(1); // Retorna para a primeira página ao aplicar um filtro
+    setCurrentPage(1); 
   };
 
   const handleFilterAmountChange = (event) => {
     setFilterAmount(event.target.value);
-    setCurrentPage(1); // Retorna para a primeira página ao aplicar um filtro
+    setCurrentPage(1); 
+  };
+
+  const handleGenerateTransactions = async () => {
+    try {
+      await axios.post('http://localhost:3001/transacao');
+      fetchData(); 
+    } catch (error) {
+      console.error('Erro ao gerar transações:', error);
+    }
   };
 
   return (
@@ -77,6 +84,8 @@ export default function Home() {
         </select>
         <label htmlFor="filterAmount"> Filtrar por quantidade:</label>
         <input type="text" id="filterAmount" value={filterAmount} onChange={handleFilterAmountChange} />
+        <br/>
+        <button onClick={handleGenerateTransactions}>Gerar Transações</button>
       </div>
       <table className={styles.table}>
         <thead>
