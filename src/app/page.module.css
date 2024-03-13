@@ -1,0 +1,39 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6rem;
+  height: 100vh; 
+
+}
+
+
+
+.tableWrapper {
+  height: calc(100vh - 100px); /* Ajuste a altura conforme necessário */
+  overflow-y: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th, .table td {
+  border: 1px solid #dddddd;
+  padding: 8px;
+}
+
+.table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.separator td {
+  border-top: 2px solid #dddddd;
+}
+
+.separator td[colspan="3"] {
+  border-top: none;
+}
